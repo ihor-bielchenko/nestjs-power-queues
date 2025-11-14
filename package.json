@@ -26,10 +26,6 @@
 	"files": [
 		"dist"
 	],
-	"scripts": {
-		"build": "tsup src/index.ts --format esm,cjs --dts",
-		"clean": "rimraf dist docs"
-	},
 	"engines": {
 		"node": ">=14"
 	},
@@ -88,12 +84,6 @@
 		"nestjs",
 		"nest"
 	],
-	"devDependencies": {
-		"@swc/core": "^1.15.1",
-		"@types/node": "^24.8.1",
-		"tsup": "^8.5.0",
-		"typescript": "^5.9.3"
-	},
 	"dependencies": {
 		"@nestjs-labs/nestjs-ioredis": "^11.0.4",
 		"@nestjs/common": "^11.1.8",
