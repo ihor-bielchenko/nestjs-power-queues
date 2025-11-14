@@ -1,0 +1,105 @@
+{
+	"name": "nestjs-power-queues",
+	"version": "1.0.0",
+	"description": "NestJS wrapper for PowerQueues.",
+	"author": "ihor-bielchenko",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+ssh://git@github.com:ihor-bielchenko/nestjs-power-queues.git"
+	},
+	"bugs": {
+		"url": "https://github.com/ihor-bielchenko/nestjs-power-queues/issues"
+	},
+	"homepage": "https://github.com/ihor-bielchenko/nestjs-power-queues#readme",
+	"type": "module",
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs",
+			"default": "./dist/index.js"
+		}
+	},
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"build": "tsup src/index.ts --format esm,cjs --dts",
+		"clean": "rimraf dist docs"
+	},
+	"engines": {
+		"node": ">=14"
+	},
+	"keywords": [
+		"redis",
+		"redis-client",
+		"redis-wrapper",
+		"redis-abstraction",
+		"redis-utility",
+		"redis-helper",
+		"redis-queue",
+		"redis-list",
+		"redis-bulk",
+		"redis-scan",
+		"redis-mget",
+		"redis-ttl",
+		"redis-expire",
+		"redis-delete",
+		"redis-keys",
+		"redis-pattern",
+		"redis-pipeline",
+		"redis-multi",
+		"redis-atomic",
+		"json-serialization",
+		"safe-serialization",
+		"key-schema",
+		"key-builder",
+		"pattern-validation",
+		"key-validation",
+		"list-iterator",
+		"lpop-count",
+		"mget-chunked",
+		"nodejs",
+		"node",
+		"typescript",
+		"ts",
+		"esm",
+		"cjs",
+		"async",
+		"await",
+		"queue",
+		"cache",
+		"key-value",
+		"data-store",
+		"lightweight",
+		"abstraction-layer",
+		"typed-client",
+		"high-performance",
+		"atomic-operations",
+		"transactional",
+		"chunked-operations",
+		"safe-redis",
+		"power-redis",
+		"nestjs-power-redis",
+		"nestjs-power-queues",
+		"nestjs",
+		"nest"
+	],
+	"devDependencies": {
+		"@swc/core": "^1.15.1",
+		"@types/node": "^24.8.1",
+		"tsup": "^8.5.0",
+		"typescript": "^5.9.3"
+	},
+	"dependencies": {
+		"@nestjs-labs/nestjs-ioredis": "^11.0.4",
+		"@nestjs/common": "^11.1.8",
+		"full-utils": "^2.0.3",
+		"nestjs-power-redis": "^1.0.1",
+		"power-queues": "^2.0.4",
+		"power-redis": "^2.0.4"
+	}
+}
