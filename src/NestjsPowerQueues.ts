@@ -13,7 +13,7 @@ import { isFunc } from 'full-utils';
 export class NestjsPowerQueues extends PowerQueues implements OnModuleInit, OnModuleDestroy {
 	public readonly logger: Logger = new Logger('NestjsPowerQueues');
 	public readonly runOnInit: boolean = false;
-	public abort: any;
+	public abort = new AbortController();
 
 	constructor(
 		public readonly redis: NestjsPowerRedis,
