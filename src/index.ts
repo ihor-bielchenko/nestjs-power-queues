@@ -1,5 +1,9 @@
-import { NestjsPowerQueues } from './NestjsPowerQueues';
+import { redisRoot } from 'nestjs-power-redis';
+import { QueueModule } from './QueueModule';
+import { QueueService } from './QueueService';
 
 export {
-	NestjsPowerQueues,
+	redisRoot,
+	QueueModule,
+	QueueService,
 };
