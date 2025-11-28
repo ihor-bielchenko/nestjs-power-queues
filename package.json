@@ -1,6 +1,6 @@
 {
 	"name": "nestjs-power-queues",
-	"version": "1.0.8",
+	"version": "1.0.9",
 	"description": "NestJS wrapper for PowerQueues.",
 	"author": "ihor-bielchenko",
 	"license": "MIT",
@@ -99,6 +99,6 @@
 		"@nestjs/common": "^11.1.8",
 		"full-utils": "^2.0.3",
 		"nestjs-power-redis": "^1.0.4",
-		"power-queues": "^2.0.10"
+		"power-queues": "^2.0.11"
 	}
 }
