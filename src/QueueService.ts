@@ -1,5 +1,4 @@
 import { 
-	Injectable,
 	OnModuleInit, 
 	OnModuleDestroy, 
 	Logger,
@@ -9,22 +8,18 @@ import { PowerQueues } from 'power-queues';
 import { RedisService } from 'nestjs-power-redis';
 import { isFunc } from 'full-utils';
 
-@Injectable()
 export class QueueService extends PowerQueues implements OnModuleInit, OnModuleDestroy {
-	public readonly logger: Logger = new Logger('QueueService');
+	public readonly logger = new Logger('QueueService');
 	public readonly runOnInit: boolean = false;
 	public redis!: IORedisLike;
-	public abort = new AbortController();
 
-	constructor(
-		public readonly redisService: RedisService,
-	) {
+	constructor(public readonly redisService: RedisService) {
 		super();
+
+		this.redis = redisService.redis as IORedisLike;
 	}
 
 	async onModuleInit() {
-		this.redis = this.redisService.redis;
-
 		await this.loadScripts(this.runOnInit);
 		
 		if (this.runOnInit) {
