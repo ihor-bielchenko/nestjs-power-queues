@@ -1,28 +1,21 @@
-# nestjs-power-queues - Secure, Scalable & Production‑Ready power-queues Integration for NestJS
+# nestjs-power-queues
 
-This module is a **dedicated, production-ready NestJS wrapper around `power-queues`** - a high‑performance Redis abstraction layer for Node.js.
-
-It is a **structured, type-safe, and feature-rich integration** designed specifically to bring all the power of `power-queues` into the NestJS ecosystem with zero friction.
+## power-queues integration for NestJS
 
 <p align="center">
-  <img src="https://img.shields.io/badge/redis-streams-red?logo=redis" />
-  <img src="https://img.shields.io/badge/nodejs-queue-green?logo=node.js" />
-  <img src="https://img.shields.io/badge/typescript-ready-blue?logo=typescript" />
-  <img src="https://img.shields.io/badge/license-MIT-lightgrey" />
-  <img src="https://img.shields.io/badge/nestjs-support-ea2845?logo=nestjs" />
-  <img src="https://img.shields.io/badge/status-production-success" />
+	<img src="https://img.shields.io/badge/redis-streams-red?logo=redis" />
+	<img src="https://img.shields.io/badge/nodejs-queue-green?logo=node.js" />
+	<img src="https://img.shields.io/badge/typescript-ready-blue?logo=typescript" />
+	<img src="https://img.shields.io/badge/license-MIT-lightgrey" />
+	<img src="https://img.shields.io/badge/nestjs-support-ea2845?logo=nestjs" />
+	<img src="https://img.shields.io/badge/status-production-success" />
 </p>
 
----
-
 ## 📚 Documentation
-
 Full documentation is available here:  
 👉 **https://nestjs-power-queues.docs.ihor.bielchenko.com**
 
----
-
-# 📦 Installation
+## 📦 Installation
 
 ``` bash
 npm install nestjs-power-queues
@@ -31,46 +24,18 @@ OR
 ```bash
 yarn add nestjs-power-queues
 ```
----
 
-# 🧪 Quick Start Example
+## 🧪 Basic usage
 
-## For example, you need to specify 2 connections: `queues1` and `queues2`
-
-### 1. 🔐 Environment Variables (power-redis -Friendly)
-
-Everything is configured using environment variables:
-
+### 1. Connection settings are specified in the .env file:
 ```env
-REDIS_<NAME>_HOST=127.0.0.1
-REDIS_<NAME>_PORT=6379
-REDIS_<NAME>_PASSWORD=pass
-REDIS_<NAME>_DATABASE=0
-
-# TLS
-REDIS_<NAME>_TLS_CRT=/etc/ssl/client.crt
-REDIS_<NAME>_TLS_KEY=/etc/ssl/client.key
-REDIS_<NAME>_TLS_CA_CRT=/etc/ssl/ca.crt
+REDIS_QUEUES_HOST=127.0.0.1
+REDIS_QUEUES_PORT=6379
+REDIS_QUEUES_PASSWORD=
+REDIS_QUEUES_DATABASE=0
 ```
 
-Instead of `<NAME>` you need to specify a custom connection name and then specify these names in `QueueModule.forRoot` (allowed in lowercase).
-For example:
-
-```env
-REDIS_QUEUES1_HOST=127.0.0.1
-REDIS_QUEUES1_PORT=6379
-REDIS_QUEUES1_PASSWORD=
-REDIS_QUEUES1_DATABASE=0
-
-REDIS_QUEUES2_HOST=127.0.0.1
-REDIS_QUEUES2_PORT=6379
-REDIS_QUEUES2_PASSWORD=
-REDIS_QUEUES2_DATABASE=0
-```
-
-TLS fields are optional.
-
----
+For information on creating connections to Redis, see **[nestjs-power-redis](https://www.npmjs.com/package/nestjs-power-redis)**
 
 ### 2. Register module with multiple Redis clients
 
@@ -79,13 +44,11 @@ import { QueueModule } from 'nestjs-power-queues';
 
 @Module({
   imports: [
-    QueueModule.forRoot([ 'queues1', 'queues2' ]),
+    QueueModule.forRoot([ 'queues' ]),
   ],
 })
 export class AppModule {}
 ```
-
----
 
 ### 3. Inject in a service
 
@@ -99,19 +62,18 @@ import {
 @Injectable()
 export class MyService {
   constructor(
-    @InjectQueue('queues1') private readonly queueService1: QueueService,
-    @InjectQueue('queues2') private readonly queueService2: QueueService,
+    @InjectQueue('queues') private readonly queueService: QueueService,
   ) {}
 
   async test() {
-    await this.queueService1.addTasks('example:jobs', [
+    await this.queueService.addTasks('example:jobs', [
       { payload },
     ]);
   }
 }
 ```
 
-### 3. Create job processor
+### 4. Create worker
 
 ```ts
 import { Injectable } from '@nestjs/common';
@@ -129,7 +91,7 @@ export class MyService extends QueueService {
   public readonly executeBatchAtOnce: boolean = true;
 
   constructor(
-    @InjectRedis('queues1') public readonly redisService: RedisService,
+    @InjectRedis('queues') public readonly redisService: RedisService,
   ) {}
 
   async onExecute(id, payload) {
@@ -140,28 +102,5 @@ export class MyService extends QueueService {
 
 The `runOnInit` parameter determines whether queue processing should start immediately after the application starts.
 
----
-
-## 🏗️ How It Works Internally
-
-### queueRoot()
-Loads all Redis configurations based on environment variables, applies TLS if present, and sets reconnection strategies.
-
-### QueueModule.forRoot()
-Creates dynamic providers for each Redis connection:
-```
-RedisQueue_queues1  
-RedisQueue_queues2
-```
-
-These providers are available through:
-```ts
-@InjectQueue('queues1')
-@InjectQueue('queues2')
-```
-
----
-
 ## 📜 License
-
 MIT - free for commercial and private use.
