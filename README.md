@@ -1,6 +1,6 @@
-# nestjs-power-queues — Secure, Scalable & Production‑Ready power-queues Integration for NestJS
+# nestjs-power-queues - Secure, Scalable & Production‑Ready power-queues Integration for NestJS
 
-This module is a **dedicated, production-ready NestJS wrapper around `power-queues`** — a high‑performance Redis abstraction layer for Node.js.
+This module is a **dedicated, production-ready NestJS wrapper around `power-queues`** - a high‑performance Redis abstraction layer for Node.js.
 
 It is a **structured, type-safe, and feature-rich integration** designed specifically to bring all the power of `power-queues` into the NestJS ecosystem with zero friction.
 
