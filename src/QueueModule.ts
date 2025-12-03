@@ -2,27 +2,36 @@ import {
 	DynamicModule, 
 	Module, 
 } from '@nestjs/common';
-import { 
-	redisRoot,
-	RedisService, 
+import {
+	RedisModule,
+	RedisService,
+	getRedisToken,
 } from 'nestjs-power-redis';
 import { QueueService } from './QueueService';
+import { getQueueToken } from './InjectQueue';
 
 @Module({})
 export class QueueModule {
 	static forRoot(names: string[]): DynamicModule {
+		const queueProviders = names.map((name) => ({
+			provide: getQueueToken(name),
+			useFactory: (redisService: RedisService) => {
+				return new QueueService(redisService);
+			},
+			inject: [ getRedisToken(name) ],
+		}));
+
 		return {
 			module: QueueModule,
 			imports: [
-				...redisRoot(names),
+				RedisModule.forRoot(names),
 			],
 			providers: [
-				RedisService,
-				QueueService,
+				...queueProviders,
 			],
 			exports: [
-				RedisService,
-				QueueService,
+				...queueProviders,
+				RedisModule,
 			],
 		};
 	}
