@@ -147,7 +147,7 @@ The `runOnInit` parameter determines whether queue processing should start immed
 ### queueRoot()
 Loads all Redis configurations based on environment variables, applies TLS if present, and sets reconnection strategies.
 
-### RedisModule.forRoot()
+### QueueModule.forRoot()
 Creates dynamic providers for each Redis connection:
 ```
 RedisQueue_queues1  
