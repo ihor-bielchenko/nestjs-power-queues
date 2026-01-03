@@ -19,11 +19,15 @@ export class QueueService extends PowerQueues implements OnModuleInit, OnModuleD
 		this.redis = redisService.redis as IORedisLike;
 	}
 
+	queueName(): string {
+		return process.env.QUEUE_NAME || String(process.argv[3]);
+	}
+
 	async onModuleInit() {
 		await this.loadScripts(this.runOnInit);
 		
 		if (this.runOnInit) {
-			await this.runQueue();
+			await this.runQueue(this.queueName());
 		}
 	}
 
