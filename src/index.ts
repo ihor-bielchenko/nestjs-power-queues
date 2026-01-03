@@ -6,6 +6,7 @@ import {
 import { QueueModule } from './QueueModule';
 import { QueueService } from './QueueService';
 
+export * from 'power-queues';
 export {
 	queueRoot,
 	getQueueToken,
