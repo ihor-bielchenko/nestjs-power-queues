@@ -1,6 +1,6 @@
 {
 	"name": "nestjs-power-queues",
-	"version": "1.0.22",
+	"version": "1.0.23",
 	"description": "High-performance Redis Streams queue integration for NestJS based on power-queues.",
 	"author": "ihor-bielchenko",
 	"license": "MIT",
@@ -98,7 +98,7 @@
 		"@nestjs-labs/nestjs-ioredis": "^11.0.4",
 		"@nestjs/common": "^11.1.8",
 		"full-utils": "^3.0.9",
-		"nestjs-power-redis": "^1.0.15",
-		"power-queues": "^2.1.3"
+		"nestjs-power-redis": "^1.0.16",
+		"power-queues": "^2.1.4"
 	}
 }

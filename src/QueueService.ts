@@ -1,7 +1,6 @@
 import { 
 	OnModuleInit, 
 	OnModuleDestroy, 
-	Logger,
 } from '@nestjs/common';
 import type { IORedisLike } from 'power-redis';
 import { PowerQueues } from 'power-queues';
@@ -9,7 +8,6 @@ import { RedisService } from 'nestjs-power-redis';
 import { isFunc } from 'full-utils';
 
 export class QueueService extends PowerQueues implements OnModuleInit, OnModuleDestroy {
-	public readonly logger = new Logger('QueueService');
 	public readonly runOnInit: boolean = false;
 	public redis!: IORedisLike;
 
