@@ -31,8 +31,12 @@ yarn add nestjs-power-queues
 ```env
 REDIS_QUEUES_HOST=127.0.0.1
 REDIS_QUEUES_PORT=6379
+REDIS_QUEUES_DATABASE=1
 REDIS_QUEUES_PASSWORD=
-REDIS_QUEUES_DATABASE=0
+REDIS_QUEUES_KEY_EXPIRE=300
+REDIS_QUEUES_TLS_CA_CRT=
+REDIS_QUEUES_TLS_KEY=
+REDIS_QUEUES_TLS_CRT=
 ```
 
 For information on creating connections to Redis, see **[nestjs-power-redis](https://www.npmjs.com/package/nestjs-power-redis)**
@@ -66,36 +70,85 @@ export class MyService {
   ) {}
 
   async test() {
-    await this.queueService.addTasks('example:jobs', [
-      { payload },
-    ]);
+    await this.queueService.addTasks('example:job', [ ...payload ]);
   }
 }
 ```
 
-### 4. Create worker
+### 4. Example of a worker for executing a MySQL insert transaction
 
 ```ts
 import { Injectable } from '@nestjs/common';
-import { 
-	InjectRedis,
-	RedisService, 
+import {
+  InjectRedis,
+  RedisService,
 } from 'nestjs-power-redis';
-import { QueueService } from 'nestjs-power-queues';
+import { 
+  QueueService,
+  Task, 
+} from 'nestjs-power-queues';
+import { 
+  isArrFilled,
+  isObjFilled,
+} from 'full-utils';
+import { MysqlService } from 'mysql';
+import { Logger } from '../logger';
 
 @Injectable()
-export class MyService extends QueueService {
-  public readonly stream: string = `example:jobs`;
-  public readonly workerBatchTasksCount: number = 8192;
+export class ExampleQueue extends QueueService {
+  public readonly logger: Logger = new Logger(ExampleQueue.name);
+  public readonly selectStuckCount: number = 256;
+  public readonly selectCount: number = 256;
+  public readonly retryCount: number = 3;
   public readonly runOnInit: boolean = true;
-  public readonly executeBatchAtOnce: boolean = true;
+  public readonly executeSync: boolean = true;
+  public readonly removeOnExecuted: boolean = true;
 
   constructor(
     @InjectRedis('queues') public readonly redisService: RedisService,
-  ) {}
+    public readonly mysqlService: MysqlService,
+  ) {
+    super(redisService);
+  }
 
-  async onExecute(id, payload) {
-  	// business-logic
+  queueName(): string {
+    return 'mysql_create:example:table_name';
+  }
+
+  async onBatchReady(queueName: string, tasks: Task[]) {
+    const values = tasks
+      .filter((task) => isObjFilled(task.payload))
+      .map((task) => task.payload);
+
+    if (isArrFilled(values)) {
+      const queryRunner = this.mysqlService.connection('database_name').createQueryRunner();
+
+      await queryRunner.connect();
+      await queryRunner.startTransaction();
+      try {
+        await queryRunner
+          .manager
+          .createQueryBuilder()
+          .insert()
+          .into('table_name')
+          .values(values)
+          .execute();
+        await queryRunner.commitTransaction();
+      }
+      catch (err) {
+        await queryRunner.rollbackTransaction();
+        throw err;
+      }
+      finally {
+        await queryRunner.release();
+      }
+    }
+  }
+
+  async onBatchError(err: any, queueName: string, tasks: Array<[ string, any, number, string, string, number ]>) {
+    this.logger.error('Transaction error', queueName, tasks.length, (process.env.NODE_ENV === 'production')
+      ? err.message
+      : err, tasks.map((task) => task[1]));
   }
 }
 ```
