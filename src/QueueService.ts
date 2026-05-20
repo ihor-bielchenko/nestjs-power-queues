@@ -21,7 +21,7 @@ export class QueueService extends PowerQueues implements OnModuleInit, OnModuleD
 	}
 
 	async init() {
-		if (await this.redisService.checkConnection()) {
+		if (await this.checkConnection()) {
 			await this.loadScripts(this.runOnInit);
 			
 			if (this.runOnInit) {
