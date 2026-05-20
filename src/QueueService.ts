@@ -5,7 +5,6 @@ import {
 import type { IORedisLike } from 'power-redis';
 import { PowerQueues } from 'power-queues';
 import { RedisService } from 'nestjs-power-redis';
-import { isFunc } from 'full-utils';
 
 export class QueueService extends PowerQueues implements OnModuleInit, OnModuleDestroy {
 	public readonly runOnInit: boolean = false;
