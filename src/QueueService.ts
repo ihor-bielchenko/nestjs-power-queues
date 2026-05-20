@@ -20,12 +20,21 @@ export class QueueService extends PowerQueues implements OnModuleInit, OnModuleD
 		return process.env.QUEUE_NAME || String(process.argv[3]);
 	}
 
-	async onModuleInit() {
-		await this.loadScripts(this.runOnInit);
-		
-		if (this.runOnInit) {
-			await this.runQueue(this.queueName());
+	async init() {
+		if (await this.redisService.checkConnection()) {
+			await this.loadScripts(this.runOnInit);
+			
+			if (this.runOnInit) {
+				await this.runQueue(this.queueName());
+			}
 		}
+		else {
+			setTimeout(this.init, 5000);
+		}
+	}
+
+	async onModuleInit() {
+		void this.init();
 	}
 
 	async onModuleDestroy() {
