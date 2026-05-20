@@ -21,7 +21,7 @@ export class QueueService extends PowerQueues implements OnModuleInit, OnModuleD
 	}
 
 	async init() {
-		if (await this.checkConnection()) {
+		if (await this.redisService.checkConnection()) {
 			await this.loadScripts(this.runOnInit);
 			
 			if (this.runOnInit) {
@@ -29,7 +29,7 @@ export class QueueService extends PowerQueues implements OnModuleInit, OnModuleD
 			}
 		}
 		else {
-			setTimeout(this.init, 5000);
+			setTimeout(() => this.init(), 5000);
 		}
 	}
 
